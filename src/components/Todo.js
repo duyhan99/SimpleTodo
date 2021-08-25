@@ -32,7 +32,17 @@ const ButtonStyled = styled(Button)`
 `;
 
 export default function Todo( {todo, onCheckBtnClick} ) {
-    return <ButtonStyled isCompleted={todo.isCompleted} shouldFitContainer iconAfter={<span className="check-icon" onClick={() => onCheckBtnClick(todo.id)}><CheckIcon primaryColor="#4fff4f" /></span>}
-    
-    >{todo.name}</ButtonStyled>
+    return <ButtonStyled
+                isCompleted = {todo.isCompleted}
+                shouldFitContainer
+                iconAfter={
+                    !todo.isCompleted &&(
+                        <span className="check-icon" onClick={() => onCheckBtnClick(todo.id)}>
+                            <CheckIcon primaryColor="#4fff4f" />
+                        </span>
+                    )
+                }
+                >
+                    {todo.name}
+                </ButtonStyled>
 }

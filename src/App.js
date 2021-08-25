@@ -1,20 +1,36 @@
 import TodoList from "./components/TodoList";
 import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
+const TODO_APP_STORAGE_KEY = 'TODO_APP';
 
 function App() {
   const [todoList, setTodoList] = useState([]);
-  const [textInput, setTextInput] = useState([]);
+  const [textInput, setTextInput] = useState("");
+
+  useEffect(() =>{
+    const storageTodoList = localStorage.getItem(TODO_APP_STORAGE_KEY);
+    if(storageTodoList){
+      setTodoList(JSON.parse(storageTodoList));
+    }
+  }, [])
+
+  useEffect(() =>{
+    localStorage.setItem(TODO_APP_STORAGE_KEY, JSON.stringify(todoList))
+  }, [todoList])
 
   const onTextInputChange = useCallback((e) =>{
     setTextInput(e.target.value);
   }, [])
 
   const onAddBtnClick = useCallback((e) =>{
-    setTodoList ([...todoList, {id : v4(), name: textInput, isCompleted: false}]);
+    setTodoList ([
+      {id : v4(), name: textInput, isCompleted: false},
+      ...todoList, 
+    
+    ]);
 
     setTextInput("");
   }, [textInput, todoList]);
@@ -25,8 +41,8 @@ function App() {
 
   return (
     <>
-      <h3>Todo need todo</h3>
-      <Textfield name="add-todo" placeholder="them viec.." 
+      <h3>Todo </h3>
+      <Textfield name="add-todo" placeholder="Add todo.." 
       elemAfterInput={<Button isDisabled={!textInput} 
       appearance="primary" onClick={onAddBtnClick}>Add</Button>} value={textInput} onChange={onTextInputChange}
       
